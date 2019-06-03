@@ -1,9 +1,9 @@
-window.onload = funcion() {
+//window.onload = funcion() {
 
   let wins = 0;
   let trys = 12;
   let guessed = [];
-  let space =;
+  let space;
   let counter;
   let guess;
   let chosenWord;
@@ -13,16 +13,8 @@ window.onload = funcion() {
   let showLives =
     document.getElementById("remainingGuess");
 
-    //choosing a word
-  var selectCat = function () {
-    if (chosenWord === questions[0]) {
-      Hint.innerHTML = "planet";
-    } else if (chosenCategory === questions[1]) {
-      Hint.innerHTML = "planet";
-    } else if (chosenCategory === questions[2]) {
-      Hint.innerHTML = "planet";
-    }
-  }
+
+ 
 // shows guesses
   result = function () {
     wordHolder = document.getElementById('correctGuess');
@@ -38,13 +30,14 @@ window.onload = funcion() {
       } else {
         guess.innerHTML = "_";
       }
+      
 
       geusses.push(guess);
       wordHolder.appendChild(correct);
       correct.appendChild(guess);
     }
   }
-}
+//}
 //document.onkeyup = funcion(event) {
   //  if (event.key = correctLetter)
     //document.getElementById(correctGuess);
