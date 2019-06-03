@@ -14,9 +14,10 @@ const showLives = document.getElementById("lives");
 const showWins = document.getElementById("wins");
 const correct = document.getElementById("correctGuess");
 const wrong = document.getElementById("lettersGuessed");
-const contain = document.querySelectorAll(".letters");
+const contain = document.querySelectorAll(".letter");
 let foundCount = 0;
-let chosenWord = questions[Math.floor(math.random() * questions.length)];
+let chosenWord = questions[Math.floor(Math.random() * questions.length)];
+console.log(chosenWord);
 
 changeLives = function () {
   showLives.innerHTML = "You have " + lives + " lives";
@@ -29,25 +30,25 @@ changeLives = function () {
     }
   }
 
-  document.onkeyup = function(event) {
-    let userInput = event.key; 
-    for (i = 0; i < chosenWord.length; i++){
-      if(userInput === chosenWord[i]){
-        const userInput = String.fromCharCode(event.keyCode || event.code).toLowerCase();
-        const found = false;
-        for (let i = 0; i < chosenWord[i];){
-          contain[i].textcontent = userInput; 
-          found = true;
-          foundCount++;
-        }
-      }
-      if(foundCount === contain.length){
-        correct.classList.add("winner");
-      }
-      if(!found) { wrong.innerHTML = wrong.innerHTML + userInput; }
-    };
-
+  document.onkeyup = function (event) {
+    
+    let userInput = String.fromCharCode(event.keyCode || event.code).toLowerCase();
+    let found = false;
+    for (let i = 0; i < chosenWord.length; ++i) {
+      if (userInput === chosenWord[i]) { 
+      contain[i].textContent = userInput;
+      found = true;
+      foundCount++;
+      console.log(userInput);
+    }
   }
+  if (foundCount === contain.length) {
+    correct.classList.add("winner");
+  }
+  if (!found) { wrong.innerHTML = wrong.innerHTML + userInput; }
+};
+
+  
 
   
 
