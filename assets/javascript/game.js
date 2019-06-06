@@ -1,33 +1,59 @@
 window.onload = () => {
-  console.log('window ready');
+  console.log("window ready");
   let wins = 0;
   let guessed = [];
+  let answered = [];
   let space;
   let counter;
   let guess;
-
-
-  const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  const questions = ["mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune", "pluto"];
-
-  const wrong = document.getElementById("lettersGuessed");
-  const correct = document.getElementById("correctGuess");
-  const showLives = document.getElementById("lives");
-  const showWins = document.getElementById("wins");
-  const contain = document.querySelectorAll("li");
   let foundCount = 0;
-  let chosenWord = questions[Math.floor(Math.random() * questions.length)];
-  console.log(chosenWord);
-  buildEmptySpaces(chosenWord);
+
+  const questions = [
+    "mercury",
+    "venus",
+    "earth",
+    "mars",
+    "jupiter",
+    "saturn",
+    "uranus",
+    "neptune",
+    "pluto"
+  ];
+
+const wrong = document.getElementById("lettersGuessed");
+const correct = document.getElementById("correctGuess");
+const showLives = document.getElementById("lives");
+const showWins = document.getElementById("wins");
+const contain = document.querySelectorAll(".letter");
+const messageElement = document.getElementById("message");
+
+
+let chosenWord = randomWord();
+buildEmptySpaces(chosenWord);
+function reset() {
+    guessed.length = 0;
+    answered.length = 0;
+    foundCount = 0;
+    chosenWord = randomWord();
+}
+function calculateWinLoses() {
+    // to-do check for win or loss
+}
+function playAgain() {
+    reset();
+    calculateWinLoses();
+}
+function randomWord() {
+    return questions[Math.floor(Math.random() * questions.length)];
+}
   function buildEmptySpaces(chosenWord) {
     let myTemplate = "";
     for (let index = 0; index < chosenWord.length; index++) {
-      myTemplate += "<li>&nbsp;</li>";
+      myTemplate += "<li class='letter'>&nbsp;</li>";
     }
     correct.innerHTML = myTemplate;
   }
-  
-  changeLives = function () {
+  changeLives = function() {
     showLives.innerHTML = "You have " + lives + " lives";
     if (lives < 1) {
       showLives.innerHTML = "Game Over";
@@ -37,43 +63,77 @@ window.onload = () => {
         showLives.innerHTML = "You Win";
       }
     }
+  };
+  function checkIfAskedBefore(letter) {
+      // Looking through the guessed list 
+      for (let i = 0; i < guessed.length; i++) {
+          if (letter === guessed[i]) {
+              return true;
+          }
+      }
+      guessed.push(letter);
+      return false;
   }
-  function placeOfLetter(letter) {
-    let locationOfLetter = [];
-    for (let index = 0; index < chosenWord.length; index++) {
-      if (chosenWord[index] === letter) { locationOfLetter.push(index); }
+  function populateAnswer(letter, letterSpaces) {
+    contain = document.querySelectorAll(".letter");
+    console.log(contain);
+  }
+  function checkWinner() {
+      // to-do: Find out if he is a winner
+  }
+  function checkLetter(letter) {
+    for (let i = 0; i < chosenWord.length; i++) {
+        if (chosenWord[i] === letter) {
+            return true;
+        }
     }
-    return locationOfLetter;
+    return false; 
+  }
+  function findLetterPosition(letter) {
+    // return array of places 
+    let letterPosition = [];
+    for (let index = 0; index < chosenWord.length; index++) {
+      if (chosenWord[index] === letter) {
+        letterPosition.push(index);
+      }
+    }
+    return letterPosition;
+  }
+  function checkAnswer(letter) {
+    let msg = "";
+    // Checking if this has been asked before 
+    // if it has then a message will appear and program will return null;
+    if (checkIfAskedBefore(letter)) {
+        msg = letter + " has been guessed before";
+        messageElement.innerHTML = msg;
+        return false;
+    }
+    // checking if the letter is in the chosen word
+    // if it is in place then run populate letter
+    if (checkLetter(letter)) {
+        msg = letter + " is found!";
+        messageElement.innerHTML = msg;
+        return true;
+    } else {
+        msg = letter + " is not found!";
+        messageElement.innerHTML = msg;
+        return false;
+    }
   }
 
-  window.addEventListener('keyup', function (event) {
-    console.log(event);
+  window.addEventListener("keyup", function(event) {
     let userInput = String.fromCharCode(event.keyCode || event.code).toLowerCase();
-    let found = false;
-    locationOfLetters = placeOfLetter(userInput);
-    //place a letter
-    console.log(locationOfLetters);
-    for (let i = 0; i < chosenWord.length; ++i) {
-      if (userInput === chosenWord[i]) {
-        const myTemplate = "<li>" + userInput + "</li>";
-        console.log(correct.innerHTML);
-        correct.innerHTML = correct.innerHTML + myTemplate;
-        found = true;
-        foundCount++;
-        console.log(userInput);
-      }
+    let correctAnswer = checkAnswer(userInput);
+    
+    if (correctAnswer) {
+        const letterPostion = findLetterPosition(userInput);
+        populateAnswer(letterPostion);
     }
-    if (foundCount === contain.length) {
-      if (correct) {
-        correct.classList.add("winner");
-      }
-    }
-    if (!found) {
-      console.log(wrong);
-      if (wrong) {
-        let myHtml = "<li>" + userInput + "</li>";
-        wrong.innerHTML += myHtml
-      }
+    let isWinner = checkWiner();
+    if (isWinner) {
+        // To-do: function to write when someone wins
+    } else {
+      changeLives();
     }
   });
-}
+};
